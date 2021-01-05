@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:text="History of searched translations"
+        android:text="History of searched items"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"

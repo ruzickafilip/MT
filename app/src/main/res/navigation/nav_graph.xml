@@ -18,17 +18,5 @@
         android:name="cz.utb.mtsp.SecondFragment"
         android:label="fragment_second"
         tools:layout="@layout/fragment_second" >
-        <action
-            android:id="@+id/action_secondFragment_to_thirdFragment"
-            app:destination="@id/thirdFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/thirdFragment"
-        android:name="cz.utb.mtsp.ThirdFragment"
-        android:label="fragment_third"
-        tools:layout="@layout/fragment_third" >
-        <action
-            android:id="@+id/action_thirdFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
     </fragment>
 </navigation>

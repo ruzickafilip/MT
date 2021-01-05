@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">Simple Translator</string>
-    <string name="action_translation">Translate expression</string>
+    <string name="app_name">Simple Movie Finder</string>
+    <string name="action_find">Find movie</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Translate</string>
+    <string name="search">Search</string>
+    <string name="header_label">Search TV show or movie</string>
+
     <string name="previous">Clear</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>

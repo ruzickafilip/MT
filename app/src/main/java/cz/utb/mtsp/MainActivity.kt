@@ -1,25 +1,77 @@
 package cz.utb.mtsp
 
 import android.os.Bundle
+import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
+
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
-    lateinit var spinner: Spinner
+    private val client = OkHttpClient()
+    var txtView: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        navController = findNavController(this, R.id.nav_host_fragment)
     }
+
+    private fun getDataFromApi(url: String, parameter: String) {
+        val request = Request.Builder()
+            .url("$url?q=$parameter")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response) {
+
+                val jsonArray = JSONArray(response.body()?.string())
+                val jsonObject: JSONObject = jsonArray.getJSONObject(0)
+
+                val showJson = jsonObject.get("show").toString()
+                val show = JSONObject(showJson)
+                val rating = JSONObject(show.getString("rating"))
+
+                if (response.isSuccessful) {
+                    runOnUiThread {
+
+                        val summary = htmlToStringFilter(show.getString("summary").toString())
+                        val showObj = Show(show.getString("id").toInt(), show.getString("language"), show.getString("name"), show.getString("officialSite"), show.getString("premiered"), rating.getString("average"), summary)
+                        txtView = findViewById<TextView>(R.id.textViewNameValue) as TextView
+                        txtView?.text = showObj.name
+                        txtView = findViewById<TextView>(R.id.textViewLanguageValue) as TextView
+                        txtView?.text = showObj.language
+                        txtView = findViewById<TextView>(R.id.textViewRatingValue) as TextView
+                        txtView?.text = showObj.rating
+                        txtView = findViewById<TextView>(R.id.textViewPremieredValue) as TextView
+                        txtView?.text = showObj.premiered
+                        txtView = findViewById<TextView>(R.id.textView) as TextView
+                        txtView?.text = showObj.summary
+
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Searched item could not be found.", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
+
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present
@@ -33,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return when (item.itemId) {
-            R.id.action_translation -> {
+            R.id.action_search -> {
                 navController.navigate(R.id.firstFragment)
                 return true
             }
@@ -41,12 +93,22 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.secondFragment)
                 return true
             }
-            R.id.action_settings -> {
-                navController.navigate(R.id.thirdFragment)
-                return true
-            }
-            R.id.action_settings -> true
+            R.id.action_search -> true
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun searchItem(view: View) {
+        val editText = findViewById<EditText>(R.id.editTextSearch) as EditText
+        getDataFromApi("https://api.tvmaze.com/search/shows", editText.text.toString())
+    }
+
+    fun htmlToStringFilter(textToFilter: String?): String? {
+        return Html.fromHtml(textToFilter).toString()
+    }
+
+
 }
+
+
+

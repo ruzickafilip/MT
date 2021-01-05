@@ -6,27 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ThirdFragment">
 
-
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="161dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="50dp"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:text="Dark Theme"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="340dp"
+        android:layout_height="303dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Switch
-        android:id="@+id/switch3"
-        android:layout_width="207dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="40dp"
-        android:text="Save Translations"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
