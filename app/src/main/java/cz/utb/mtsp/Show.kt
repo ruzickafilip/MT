@@ -5,7 +5,7 @@ data class Show(
     val id: Int,
     val language: String,
     val name: String,
-    val officialSite: Any,
+    val officialSite: String,
     val premiered: String,
     val rating: String,
     val summary: String?

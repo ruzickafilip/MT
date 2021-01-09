@@ -1,16 +1,18 @@
 package cz.utb.mtsp
 
+import Database
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
 import android.os.Bundle
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
+import com.squareup.picasso.Picasso
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     private val client = OkHttpClient()
     var txtView: TextView? = null
+    var imageView: ImageView? = null
+    val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 val showJson = jsonObject.get("show").toString()
                 val show = JSONObject(showJson)
                 val rating = JSONObject(show.getString("rating"))
+                val image = JSONObject(show.getString("image"))
 
                 if (response.isSuccessful) {
                     runOnUiThread {
@@ -62,6 +67,15 @@ class MainActivity : AppCompatActivity() {
                         txtView = findViewById<TextView>(R.id.textView) as TextView
                         txtView?.text = showObj.summary
 
+                        imageView = findViewById<ImageView>(R.id.imageView) as ImageView
+                        if (image !== null) {
+                            val imageUrl : String = image.getString("medium").toString()
+                            val newImageUrl : String = imageUrl.replace("http://", "https://")
+                            Picasso.get().load(newImageUrl).into(imageView)
+                        }
+
+                        val db = Database(activity)
+                        db.insertData(showObj)
                     }
                 } else {
                     Toast.makeText(this@MainActivity, "Searched item could not be found.", Toast.LENGTH_SHORT).show()
@@ -101,12 +115,13 @@ class MainActivity : AppCompatActivity() {
     fun searchItem(view: View) {
         val editText = findViewById<EditText>(R.id.editTextSearch) as EditText
         getDataFromApi("https://api.tvmaze.com/search/shows", editText.text.toString())
+
+
     }
 
     fun htmlToStringFilter(textToFilter: String?): String? {
         return Html.fromHtml(textToFilter).toString()
     }
-
 
 }
 
