@@ -1,14 +1,15 @@
 package cz.utb.mtsp
 
 import Database
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
 import android.os.Bundle
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
@@ -17,6 +18,9 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 class MainActivity : AppCompatActivity() {
@@ -53,9 +57,26 @@ class MainActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     runOnUiThread {
+                        txtView = findViewById<TextView>(R.id.textViewPlaceholder) as TextView
+                        txtView!!.visibility = View.INVISIBLE;
+
+                        txtView = findViewById<TextView>(R.id.textViewName) as TextView
+                        txtView!!.visibility = View.VISIBLE;
+
+                        txtView = findViewById<TextView>(R.id.textViewRating) as TextView
+                        txtView!!.visibility = View.VISIBLE;
+
+                        txtView = findViewById<TextView>(R.id.textViewLanguage) as TextView
+                        txtView!!.visibility = View.VISIBLE;
+
+                        txtView = findViewById<TextView>(R.id.textViewPremiered) as TextView
+                        txtView!!.visibility = View.VISIBLE;
+
+                        txtView = findViewById<TextView>(R.id.textViewHeader) as TextView
+                        txtView!!.visibility = View.VISIBLE;
 
                         val summary = htmlToStringFilter(show.getString("summary").toString())
-                        val showObj = Show(show.getString("id").toInt(), show.getString("language"), show.getString("name"), show.getString("officialSite"), show.getString("premiered"), rating.getString("average"), summary)
+                        val showObj = Show(show.getString("id").toInt(), show.getString("language"), show.getString("name"), show.getString("officialSite"), show.getString("premiered"), rating.getString("average"), summary, LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)).toString())
                         txtView = findViewById<TextView>(R.id.textViewNameValue) as TextView
                         txtView?.text = showObj.name
                         txtView = findViewById<TextView>(R.id.textViewLanguageValue) as TextView
@@ -115,8 +136,6 @@ class MainActivity : AppCompatActivity() {
     fun searchItem(view: View) {
         val editText = findViewById<EditText>(R.id.editTextSearch) as EditText
         getDataFromApi("https://api.tvmaze.com/search/shows", editText.text.toString())
-
-
     }
 
     fun htmlToStringFilter(textToFilter: String?): String? {

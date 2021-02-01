@@ -61,7 +61,7 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
             listView = activity.findViewById<ListView>(R.id.list_view_history)
             val listItems = arrayOfNulls<String>(data.size)
             for (i in 0 until data.size) {
-                listItems[i] = data[i].id.toString() + " " + data[i].name.toString() + "\n"
+                listItems[i] = data[i].name.toString() + "    " + data[i].date.toString() + "\n"
             }
             val adapter = ArrayAdapter(activity, android.R.layout.simple_list_item_1, listItems)
             listView.adapter = adapter
